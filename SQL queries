@@ -1,0 +1,20 @@
+--This query retrieves all students enrolled in a particular course and section.-- 
+SELECT S.Student_id, S.Student_first_name, S.Student_last_name  
+FROM Enrollment E JOIN Student S ON E.Student_id = S.Student_id  
+WHERE E.Course_id = 'INFO370' AND E.Section_id = '001'; 
+--This query lists instructors in the "Information Systems" department.-- 
+SELECT I.Instructor_id, I.Instructor_first_name, I.Instructor_last_name  
+FROM Instructor I JOIN Department D ON I.Department_id = D.Department_id  
+WHERE D.Department_name = 'Information Systems'; 
+--This query calculates the number of available slots in a course session.-- 
+SELECT CS.Course_id, CS.Section_id, CS.Max_students - COUNT(E.Student_id) AS Available_slots  
+FROM Course_session CS 
+LEFT JOIN Enrollment E ON CS.Course_id = E.Course_id AND CS.Section_id = E.Section_id  
+WHERE CS.Course_id = 'INFO370' AND CS.Section_id = '001'  
+GROUP BY CS.Course_id, CS.Section_id, CS.Max_students; 
+--This query finds students enrolled in more than one course session.-- 
+SELECT E.Student_id, S.Student_first_name, S.Student_last_name, COUNT(*) AS Session_Count  
+FROM Enrollment E  
+JOIN Student S ON E.Student_id = S.Student_id  
+GROUP BY E.Student_id, S.Student_first_name, S.Student_last_name  
+HAVING COUNT(*) > 1; 
